@@ -1,0 +1,6 @@
+.label,.glyphicon { margin-right:5px; }
+
+.avatar {
+    max-height: 30px;
+    position: absolute;
+ }

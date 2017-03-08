@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="row">
+    <!-- Begin Horizontal Timeline -->
+    <div class="container">
+      <div class="page-header">
+        <h1 id="timeline">Upcoming Fressevents</h1>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Error</strong> {{ errorMessage }}
+      </div>
+      <ul class="timeline">
+        <li [class.timeline-inverted]="i%2 != 0" *ngFor="let item of appointments | orderBy : ['Date'] | async  ;let i = index">
+          <ng-container *ngIf="item.participated">
+            <div class="timeline-badge success">
+              <i class="glyphicon glyphicon-ok"></i>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!item.participated">
+            <div class="timeline-badge warning">
+              <i class="glyphicon glyphicon-info-sign"></i>
+            </div>
+          </ng-container>
+
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Nächstes Essen am {{ item.Date | date:'dd.MM.yyyy' }}</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> erstellt am:  {{ item.Created | date:'dd.MM.yyyy' }} durch {{ item.CreatedBy }}</small></p>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Teilnehmer: {{ item.Orders?.length }}</small></p>
+            </div>
+            <div class="timeline-body">
+              <div class="row">
+                <ng-container *ngIf="!item.participated" class="col-md-3">
+                  <div>
+                    <button [disabled]="!canParticipate(item)" (click)="navigateToAppointment(item.Id)" type="button" class="btn btn-primary btn-circle"><i class="glyphicon glyphicon-ok"></i></button>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="item.participated" class="col-md-3">
+                  <div>
+                    <button [disabled]="!canParticipate(item)" (click)="deleteOrder(item.Id)" type="button" class="btn btn-danger btn-circle"><i class="glyphicon glyphicon-remove"></i></button>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="IsAdmin" class="col-md-3">
+                  <div>
+                    <button [disabled]="item.Orders?.length > 0" (click)="deleteAppointment(item)" type="button" class="btn btn-danger btn-circle"><i class="glyphicon glyphicon-exclamation-sign"></i></button>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <!-- Template for if user is admin -->
+      <ng-container *ngIf="IsAdmin">
+        <div class="col-md-4">
+          <button (click)="CreateAppointmentModal.open()" type="button" class="btn btn-success btn-circle"><i class="glyphicon glyphicon-plus-sign"></i></button>
+        </div>
+      </ng-container>
+
+    </div>
+
+    <!-- End Horizontal Timeline -->
+  </div>
+
+  <modal #CreateAppointmentModal>
+    <modal-header [show-close]="true">
+      <h4 class="modal-title">Add new Mettfressing Event</h4>
+    </modal-header>
+    <modal-body>
+      Choose Date <br>
+      <div class="input-group">
+        <input #selectedDate id="date-picker-2" type="date" class="date-picker form-control" />
+        <label for="date-picker-2" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+
+                </label>
+      </div>
+    </modal-body>
+    <modal-footer [show-default-buttons]="false">
+      <button class="btn btn-primary" (click)="AddAppointment(selectedDate.value);CreateAppointmentModal.close()">Save</button>
+    </modal-footer>
+  </modal>

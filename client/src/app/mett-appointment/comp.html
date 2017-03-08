@@ -1,0 +1,47 @@
+<li class="timeline">
+  <!-- Template for if user has not participated in the appointment -->
+  <div *ngIf="item.participated">
+    <div class="timeline-badge success">
+      <i class="glyphicon glyphicon-ok"></i>
+    </div>
+  </div>
+
+  <!-- Template for if user has participated in the appointment -->
+  <div *ngIf="!item.participated">
+    <div class="timeline-badge warning">
+      <i class="glyphicon glyphicon-info-sign"></i>
+    </div>
+  </div>
+
+  <div class="timeline-panel">
+    <div class="timeline-heading">
+      <h4 class="timeline-title">Nächstes Essen am {{ item.Date | date:'dd.MM.yyyy' }}</h4>
+      <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> erstellt am:  {{ item.Created | date:'dd.MM.yyyy' }} durch {{ item.CreatedBy }}</small></p>
+      <p><small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Teilnehmer: {{ item.Orders?.length }}</small></p>
+    </div>
+    <div class="timeline-body">
+      <div class="row">
+        <!-- Template for if user has not participated in the appointment -->
+        <div *ngIf="!item.participated" class="col-md-3">
+          <div>
+            <button [disabled]="!canParticipate(item)" (click)="navigateToAppointment(item.Id)" type="button" class="btn btn-primary btn-circle"><i class="glyphicon glyphicon-ok"></i></button>
+          </div>
+        </div>
+
+        <div *ngIf="item.participated" class="col-md-3">
+          <div>
+            <button [disabled]="!canParticipate(item)" (click)="deleteOrder(item.Id)" type="button" class="btn btn-danger btn-circle"><i class="glyphicon glyphicon-remove"></i></button>
+          </div>
+        </div>
+
+        <!-- Template for if user is admin -->
+        <div *ngIf="IsAdmin" class="col-md-3">
+          <div>
+            <button [disabled]="item.Orders?.length > 0" (click)="deleteAppointment(item)" type="button" class="btn btn-danger btn-circle"><i class="glyphicon glyphicon-exclamation-sign"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</li>

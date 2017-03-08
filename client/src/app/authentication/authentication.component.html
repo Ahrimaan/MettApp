@@ -1,0 +1,37 @@
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+
+<div class="container">
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  		<strong>Error</strong> {{ errorMessage }}
+	</div>
+      <script id="metamorph-1-start" type="text/x-placeholder"></script><script id="metamorph-21-start" type="text/x-placeholder"></script>
+
+	<div class="container text-center">
+	    <form class="form-signin" data-ember-action="2">
+	    	<h2 class="form-signin-heading">Sign in</h2>
+
+			<small class="text-muted">Connect with your favorite social network</small>
+			<br><br>
+
+
+<p>
+<a class="btn btn-primary social-login-btn social-google" (click)="loginWithGoogle()" href="#"><i class="fa fa-google-plus"></i></a>
+<a class="btn btn-primary social-login-btn social-amazon" (click)="loginWithAmazon()" href="#"><i class="fa fa-amazon"></i></a>
+</p>
+<p>
+<!--<a class="btn btn-primary social-login-btn social-github" (click)="loginWithGithub()"><i class="fa fa-github-alt"></i></a> -->
+<a class="btn btn-primary social-login-btn social-linkedin" (click)="loginWithLinkedIn()"><i class="fa fa-linkedin"></i></a>
+</p>
+
+<br><br>
+
+
+		    <small class="text-muted">Or sign in with your Mail</small>
+		    <br><br>
+	        <input id="ember360" class="ember-view ember-text-field form-control login-input" placeholder="Email Address" type="text" #mail>
+	        <input id="ember361" class="ember-view ember-text-field form-control login-input-pass" placeholder="Password" type="password" #pass>
+	       <button class="btn btn-lg btn-primary btn-block btn-center" type="submit" data-bindattr-3="3" (click)="login(mail.value,pass.value)">Sign in</button>	        <br>
+	        <small class="create-account text-muted">Dont have a ChaosMett or social network account? <button routerLink="/register" id="ember363" class="ember-view btn btn-sm btn-default"> Sign Up </button> </small>
+	    </form>
+    </div>

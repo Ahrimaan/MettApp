@@ -1,0 +1,43 @@
+<div class="container">
+ <div class="row">
+   <div class="col-md-7 center">
+         <h3> Nächstes Essen am {{ date | date:'dd.MM.yyyy' }}</h3>
+   </div>
+ </div>
+<div class="col-md-7 center">
+<form>
+   <div [(hidden)]="!errorMessage" class="alert alert-danger">
+                    {{ errorMessage }}
+    </div>
+    <div class="form-group">
+    <label for="exampleSelect1">Wieviele Bröttchen möchtest du essen ?</label>
+    <select class="form-control" id="exampleSelect1" [(ngModel)]="order.value" name="value">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="exampleSelect2">Möchtest du vorab mit Paypal bezahlen ?</label>
+    <select class="form-control" id="exampleSelect2" [(ngModel)]="order.payed" (change)="paymentChanged($event.target.value)" name="payed">
+      <option [ngValue]="false">Nein</option>
+      <option [ngValue]="true">Ja</option>
+    </select>
+  </div>
+  <div *ngIf="showPaypalButton()" id="payLink">
+    <button  class="btn btn-default" (click)="referToPaypal()">
+       <img src="https://www.paypalobjects.com/webstatic/paypalme/images/pp_logo_small.png" width="100">
+
+    </button>
+  </div>
+  <div class="form-group">
+    <label for="exampleTextarea">Sonderwünsche ?</label>
+    <textarea class="form-control" id="exampleTextarea" rows="3" [(ngModel)]="order.specialNeeds" name="specialNeeds"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary" (click)="saveOrder()">Speichern</button>
+  <button [(hidden)]="!existingOrderID" type="submit" class="btn btn-danger" (click)="deleteOrder()">Bestellung Löschen</button>
+</form>
+</div>
+</div>

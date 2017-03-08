@@ -1,0 +1,23 @@
+{
+    "email":"warmuth.pawel@gmail.com",
+    "email_verified":true,
+    "name":"Pawel Warmuth",
+    "given_name":"Pawel",
+    "family_name":"Warmuth",
+    "picture":"https://lh3.googleusercontent.com/-sLNAdJbSRWA/AAAAAAAAAAI/AAAAAAAAADU/XZ7G8DEpnS8/photo.jpg",
+    "gender":"male",
+    "locale":"de",
+    "clientID":"ksXjhEEZmYjoK3QtYyMpy6Ngnrpb2v0p",
+    "updated_at":"2016-09-10T18:53:07.577Z",
+    "user_id":"google-oauth2|104452206825748984601",
+    "nickname":"warmuth.pawel",
+    "identities":[
+        {
+            "provider":"google-oauth2",
+            "user_id":"104452206825748984601",
+            "connection":"google-oauth2",
+            "isSocial":true}
+            ],
+    "created_at":"2016-09-10T14:23:29.086Z",
+    "global_client_id":"HlRVFCyEEQkMEGWiv58i3byAPN1EYIju"
+}

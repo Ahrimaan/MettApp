@@ -1,0 +1,14 @@
+.show{
+opacity: 1 !important;
+display :inherit;
+transition: .2s ease-in-out all;
+}
+.hide{
+opacity: 0 !important;
+display :none
+}
+.step{
+opacity: 0;
+display :none;
+transition: .2s ease-in-out all;
+}

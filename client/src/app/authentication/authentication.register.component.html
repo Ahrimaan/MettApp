@@ -1,0 +1,21 @@
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+
+<div class="container">
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  		<strong>Error</strong> {{ errorMessage }}
+	</div>
+      <script id="metamorph-1-start" type="text/x-placeholder"></script><script id="metamorph-21-start" type="text/x-placeholder"></script>
+
+	<div class="container text-center">
+	    <form class="form-signin" data-ember-action="2">
+	    	<h2 class="form-signin-heading">Sign Up</h2>
+
+		    <br><br>	    	
+	        <input id="ember360" class="ember-view ember-text-field form-control login-input" placeholder="Email Address" type="text" #mail>
+			<input id="ember360" class="ember-view ember-text-field form-control login-input" placeholder="Full Name" type="text" #fullName>
+	        <input id="ember361" class="ember-view ember-text-field form-control login-input-pass" placeholder="Password" type="password" #pass>
+	       <button class="btn btn-lg btn-primary btn-block btn-center" type="submit" data-bindattr-3="3" (click)="register(mail.value,pass.value,fullName.value)">Sign Up</button>        <br>
+	        <small><button routerLink="/login" id="ember363" class="ember-view btn btn-sm btn-default"> Back to Login </button> </small>
+	    </form>
+    </div>
