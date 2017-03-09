@@ -4,32 +4,13 @@
 
 var passport = require('passport');
 var ctrl = require('./userController');
+var checkAdminRole = require('../checkAdminStatus');
+var checkAuth = require('./../checkAuthentication');
+var checkIsCurrentUser = require('../isCurrentUser');
 
 module.exports = function (server) {
-    server.get('/user/:id', (req,res,next) => {
-        if(!req.isAuthenticated()){
-            return res.sendStatus(401);
-        }
-        var userId = req.params.id;
-        if(userId === undefined || userId === "undefined"){
-            return res.sendStatus(401);
-        }
-        ctrl.getUser(userId, (err,user) => {
-            if(err){
-               return res.status(500).send(err);
-            }
-            user.passwordHash = undefined;
-            return res.send(user);
-        })
-        
-    });
-
-    server.delete('/user/:id', (req,res,next) => {
-       req.logOut();
-       req.session.destroy();
-       return res.sendStatus(200);
-    });
-
+    server.get('/user/:id',checkAuth, ctrl.getUser);
+    server.delete('/user/:id', ctrl.logOut);
     server.post('/user', ctrl.CreateLocalUser);
     server.post('/user/login',ctrl.authLocal);
 }

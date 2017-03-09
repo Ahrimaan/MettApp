@@ -11,7 +11,8 @@ import { AppComponent } from './app.component';
 import { AuthenticationComponent, AuthService, RegisterUserComponent } from './authentication';
 import { MettAppointmentComponent, MettAppointmentDetailComponent, AppointmentService  } from './mett-appointment';
 import { NavigationComponent } from './navigation';
-import {  HttpOptions, OrderBy  } from './shared/';
+import { HttpOptions, OrderBy  } from './shared/';
+import { AdminComponent,AdminListComponent } from './administrator';
 
 import { comp } from './mett-appointment/comp';
 
@@ -25,6 +26,8 @@ import { comp } from './mett-appointment/comp';
     NavigationComponent,
     RegisterUserComponent,
     OrderBy,
+    AdminComponent,
+    AdminListComponent,
     comp
   ],
   imports: [

@@ -1,7 +1,7 @@
 var user = require('./adminRole/adminRoleModel');
 
 module.exports = function(req,res,next){
-    var userId = req.user.userId;
+    var userId = req.user.id;
 
     if(!userId) {
         return res.sendStatus(403);

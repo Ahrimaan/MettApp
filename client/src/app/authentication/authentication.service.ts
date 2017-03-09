@@ -38,7 +38,7 @@ export class AuthService {
     let userObjString = sessionStorage.getItem('userObject');
     let userObj = JSON.parse(userObjString);
     if (userObj) {
-      this.getUserData(userObj.userId);
+      this.getUserData(userObj.id);
     }
   }
 
@@ -108,7 +108,7 @@ export class AuthService {
   signInWithMail(mail: string, password: string) {
     this.httpClient.post(this.localLoginUrl, { 'userId': mail, 'password': password }, this.httpOptions).subscribe(res => {
       if (res.status === 200) {
-        this.getUserData(res.json().userId);
+        this.getUserData(res.json().id);
       }
     }, error => {
       this.errorReply.next(error._body);
@@ -137,12 +137,20 @@ export class AuthService {
     let userObjString = sessionStorage.getItem('userObject');
     let userObj = JSON.parse(userObjString);
     if (userObj) {
-      return userObj.userId;
+      return userObj.id;
     }
   }
 
   get isAdmin(): Observable<boolean> {
     return this.isAdminReply;
+  }
+
+  get userIsAdmin():boolean{
+      let userObjString = sessionStorage.getItem('userObject');
+    let userObj = JSON.parse(userObjString);
+    if (userObj) {
+      return userObj.IsAdmin;
+    }
   }
 
   get username(): string {

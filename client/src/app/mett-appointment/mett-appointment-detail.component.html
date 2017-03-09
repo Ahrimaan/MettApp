@@ -21,7 +21,7 @@
   </div>
   <div class="form-group">
     <label for="exampleSelect2">Möchtest du vorab mit Paypal bezahlen ?</label>
-    <select class="form-control" id="exampleSelect2" [(ngModel)]="order.payed" (change)="paymentChanged($event.target.value)" name="payed">
+    <select class="form-control" id="exampleSelect2" [(ngModel)]="order.payed"  name="payed">
       <option [ngValue]="false">Nein</option>
       <option [ngValue]="true">Ja</option>
     </select>
@@ -37,7 +37,6 @@
     <textarea class="form-control" id="exampleTextarea" rows="3" [(ngModel)]="order.specialNeeds" name="specialNeeds"></textarea>
   </div>
   <button type="submit" class="btn btn-primary" (click)="saveOrder()">Speichern</button>
-  <button [(hidden)]="!existingOrderID" type="submit" class="btn btn-danger" (click)="deleteOrder()">Bestellung Löschen</button>
 </form>
 </div>
 </div>

@@ -39,7 +39,7 @@ export class MettAppointmentComponent implements OnInit {
 
   canParticipate(item: MettAppointmentModel) {
     let now = new Date();
-    now.setTime(now.getTime() + (12 * 60 * 60 * 1000));
+    now.setTime(now.getTime() + (2 * 60 * 60 * 1000));
     let result = new Date(item.Date) > now;
     return result;
   }

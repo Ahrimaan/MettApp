@@ -7,6 +7,7 @@ module.exports = function (server) {
     // User Routes
     server.get('/mett',checkAuth, controller.getAll);
     server.get('/mett/:id',checkAuth, controller.getOne);
+    server.get('/mett/:id/participants' , checkAuth,checkAdminRole,controller.getParticipants);
     server.post('/mett',checkAuth, checkAdminRole, controller.createMett);
     server.post('/mett/:id/order/',checkAuth, controller.participate);
     server.delete("/mett/:id",checkAuth, checkAdminRole, controller.deleteAppointment);

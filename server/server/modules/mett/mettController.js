@@ -1,13 +1,14 @@
 var mettModel = require('./mettModel');
+let userModel = require('./../user/userModel');
 
 //Create a Mett Appointment
 exports.createMett = function (req, resp, next) {
-    checkMettAppointmentExist(req.body.date,req,resp);
+    checkMettAppointmentExist(req.body.date, req, resp);
 };
 
 // Get all Appointments
 exports.getAll = function (req, res, next) {
-    mettModel.find({ "date" :{$gte: new Date()} }).sort({ date: 1 }).exec(
+    mettModel.find({ "date": { $gte: new Date() } }).sort({ date: 1 }).exec(
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -18,46 +19,66 @@ exports.getAll = function (req, res, next) {
     );
 }
 
-exports.getOne = (req,res,next) => {
-  mettModel.findOne({ _id: req.params.id }).exec((err,result) => {
-      if(err){
-          console.log(err);
-          return res.sendStatus(500);
-      }
-      if(result){
-          res.send(result);
-      }
-  })
+exports.getOne = (req, res, next) => {
+    mettModel.findOne({ _id: req.params.id }).exec((err, result) => {
+        if (err) {
+            console.log(err);
+            return res.sendStatus(500);
+        }
+        if (result) {
+            res.send(result);
+        }
+    })
 };
 
-exports.participate = (req,res,next) => {
+exports.getParticipants = (req, res, next) => {
     var mettId = req.params.id;
-    if(!mettId){
+    if (!mettId) {
+        console.log('no mettId was given', req);
+        return res.sendStatus(403);
+    }
+    mettModel.findOne({ _id: mettId }).exec((err, result) => {
+        let ids = result.participants.map(val => { return val.userID });
+        userModel.find({ id: { $in: ids } }).exec((err, users) => {
+            let resultList = [];
+            result.participants.forEach(part => {
+                part.fullname = users.findOne({id: part.userID }).fullName;
+                resultList.push(part);
+            })
+
+            return res.send(resultList);
+        });
+    });
+}
+
+exports.participate = (req, res, next) => {
+    var mettId = req.params.id;
+    if (!mettId) {
         console.log('no mettId was given', req);
         return res.sendStatus(403);
     }
 
-    mettModel.findOne({ _id: mettId }).exec((err,result) => {
-        if(err){
+    mettModel.findOne({ _id: mettId }).exec((err, result) => {
+        if (err) {
             console.log(err);
             return res.sendStatus(500);
         }
-        if(result){
-            if(!canParticipate(result.date)){
-               return res.send(304);     
+        if (result) {
+            if (!canParticipate(result.date)) {
+                return res.send(304);
             }
-            if(!result.participants){
+            if (!result.participants) {
                 result.participants = []
             }
             result.participants.push(
                 {
-                    userID:req.body.userID,
-                    value:req.body.value,
-                    payed:req.body.payed,
-                    specialNeeds:req.body.specialNeeds
+                    userID: req.body.userID,
+                    value: req.body.value,
+                    payed: req.body.payed,
+                    specialNeeds: req.body.specialNeeds
                 });
-            result.save((err,result) => {
-                if(err){
+            result.save((err, result) => {
+                if (err) {
                     console.log(err);
                     res.sendStatus(500);
                 }
@@ -75,35 +96,35 @@ exports.deleteAppointment = function (req, res, next) {
     deleteAppointment(res, req.params.id);
 }
 
-exports.unparticipate = (req,res,next) => {
-        var appointmentId = req.params.id;
-        var participantId = req.params.participant;
-        if(!appointmentId || !participantId){
-            res.send(403);
+exports.unparticipate = (req, res, next) => {
+    var appointmentId = req.params.id;
+    var participantId = req.params.participant;
+    if (!appointmentId || !participantId) {
+        res.send(403);
+    }
+    mettModel.findOne({ _id: appointmentId }).exec((err, result) => {
+        if (!canParticipate(result.date)) {
+            return res.send(304);
         }
-        mettModel.findOne({ _id : appointmentId }).exec((err,result) => {
-            if(!canParticipate(result.date)){
-               return res.send(304);
-            }
-            if(err){
-                return res.send(500);
-            }
-            if(result){
-                result.participants.splice(result.participants.findIndex(x => x.userID === participantId),1);
-                result.save((err,result) => {
-                    if(err){
-                        return res.send(500);
-                    }
-                    return res.send(200);
-                });
-            }
-            return res.status(401);
-        });
+        if (err) {
+            return res.send(500);
+        }
+        if (result) {
+            result.participants.splice(result.participants.findIndex(x => x.userID === participantId), 1);
+            result.save((err, result) => {
+                if (err) {
+                    return res.send(500);
+                }
+                return res.send(200);
+            });
+        }
+        return res.status(401);
+    });
 }
 
-function canParticipate(itemdate){
+function canParticipate(itemdate) {
     let now = new Date();
-    now.setTime(now.getTime() + (12 * 60 * 60 * 1000) );
+    now.setTime(now.getTime() + (2 * 60 * 60 * 1000));
     let result = new Date(itemdate) > now;
     return result;
 }
@@ -118,7 +139,7 @@ function deleteAppointment(res, id) {
     });
 }
 
-function checkMettAppointmentExist(mettDate,req, resp) {
+function checkMettAppointmentExist(mettDate, req, resp) {
     mettModel.find({ date: mettDate }).exec(function (err, mett) {
         if (err) {
             console.log(err);

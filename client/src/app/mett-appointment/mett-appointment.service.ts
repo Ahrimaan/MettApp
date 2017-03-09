@@ -22,32 +22,39 @@ export class AppointmentService {
     return this._appointments.asObservable();
   }
 
- public loadAppointments(userId : string) {
+  public loadAppointments(userId: string) {
     this.httpClient.get(this.serverUrl, this.httpOptions.RequestOptions)
       .map(res => res.json())
       .map((items: Array<any>) => {
-        let list: Array<MettAppointmentModel> = [];
-        if (items) {
-          items.forEach(item => {
-            let model = new MettAppointmentModel();
-            model.Created = item.created;
-            model.CreatedBy = item.createdBy;
-            model.Date = item.date;
-            model.Id = item._id;
-            model.participated = item.participants.filter(part => part.userID === userId).length > 0;
-            model.Orders = item.participants.map(x => {
-              return new MettOrder();
-            });
-            list.push(model);
+        return items.map(item => {
+          let model = new MettAppointmentModel();
+          model.Created = item.created;
+          model.CreatedBy = item.createdBy;
+          model.Date = item.date;
+          model.Id = item._id;
+          model.participated = item.participants.filter(part => part.userID === userId).length > 0;
+          model.Orders = item.participants.map(x => {
+            let order = new MettOrder();
+            order.payed = x.payed;
+            order.specialNeeds = x.specialNeeds;
+            order.userID = x.UserID;
+            order.value = x.value;
+            return order;
           });
-        }
-        this._appointmentCollection = list;
+          return model;
+        });
+      }).do(x => {
+        this._appointmentCollection = x;
         this._appointments.next(this._appointmentCollection);
       }).subscribe();
- }
+  }
 
   GetSingleAppointment(id: string): MettAppointmentModel {
     return this._appointmentCollection.find(x => x.Id === id);
+  }
+
+  GetEnrichedMettOrders(mettId:string):Observable<any> {
+      return this.httpClient.get(this.serverUrl + mettId +'/participants', this.httpOptions.RequestOptions);
   }
 
   DeleteAppointment(key: string) {
@@ -72,8 +79,8 @@ export class AppointmentService {
     return this.httpClient.post(this.serverUrl + id + '/order', order, this.httpOptions.RequestOptions);
   }
 
-  DeleteOrder(userId: string, mettorderId: string ) {
-    return this.httpClient.delete(this.serverUrl + mettorderId + '/order/' + userId, this.httpOptions.RequestOptions ).subscribe(resp => {
+  DeleteOrder(userId: string, mettorderId: string) {
+    return this.httpClient.delete(this.serverUrl + mettorderId + '/order/' + userId, this.httpOptions.RequestOptions).subscribe(resp => {
       if (resp.status === 200) {
         this.loadAppointments(userId);
       }

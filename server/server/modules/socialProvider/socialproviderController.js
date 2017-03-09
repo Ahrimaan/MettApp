@@ -1,11 +1,10 @@
-var passport = require('passport');
-var googleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var amazonStrategy = require('passport-amazon').Strategy;
-var linkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+let passport = require('passport');
+let googleStrategy = require('passport-google-oauth').OAuth2Strategy;
+let amazonStrategy = require('passport-amazon').Strategy;
+let linkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
-var cache = require('./../../cache');
-var config = require('./../../configuration');
-var userCtrl = require('./../user/userController');
+let cache = require('./../../cache');
+let config = require('./../../configuration');
 
 if (config.authentication.google.use) {
     passport.use(new googleStrategy({
@@ -60,7 +59,7 @@ function authProviderCallback(req, res, next) {
 
 function checkAuthenticationStatus(req, res, next) {
     if (req.isAuthenticated()) {
-        res.set('user', req.session.passport.user.userId);
+        res.set('user', req.session.passport.user.id);
         return res.sendStatus(200);
     }
     return res.sendStatus(401);

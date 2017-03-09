@@ -8,56 +8,56 @@ var passport = require('passport');
 
 var ctrl = {}
 
-passport.use(new localStrategy({usernameField:'userId',passwordField:'password'},(username,password,done) => {
-        LoginUser(username,password,done);
+passport.use(new localStrategy({ usernameField: 'userId', passwordField: 'password' }, (username, password, done) => {
+    LoginUser(username, password, done);
 }));
 
-function CreateOrUpdateUser(user,done) {
-        userMdl.findOne({userId:user.id}, (err,dbUser) => {
-            if(dbUser){
-                UpdateUser(user,done);
+function CreateOrUpdateUser(user, done) {
+    userMdl.findOne({ id: user.id }, (err, dbUser) => {
+        if (dbUser) {
+            done(null,dbUser);
+        }
+        else {
+            var newMdl = new userMdl();
+            newMdl.id = user.id;
+            newMdl.fullName = user.displayName;
+            newMdl.isSocial = true;
+            if (user.photos) {
+                newMdl.avatarUrl = user.photos[0].value;
             }
-            else {
-                var newMdl = new userMdl();
-                newMdl.userId = user.id;
-                newMdl.fullName = user.displayName;
-                newMdl.isSocial = true;
-                if(user.photos){
-                    newMdl.avatarUrl = user.photos[0].value;
-                }
-                newMdl.save((err,result) => {
-                    done(null,result);
-                });
-            }
-        });
+            newMdl.save((err, result) => {
+                done(null, result);
+            });
+        }
+    });
 }
 
-function LoginUser(username,password, done) {
-    userMdl.findOne({userId:username}, (err,dbUser) => {
-            if(err || !dbUser){
-                return done((err || 'User not found'), null);
-            }
+function LoginUser(username, password, done) {
+    userMdl.findOne({ id: username }, (err, dbUser) => {
+        if (err || !dbUser) {
+            return done((err || 'User not found'), null);
+        }
 
-            var result = bcrypt.compareSync(password,dbUser.passwordHash);
-            if(!result){
-               return done('Password missmatch', null)
-            }
+        var result = bcrypt.compareSync(password, dbUser.passwordHash);
+        if (!result) {
+            return done('Password missmatch', null)
+        }
 
-            return done(null,dbUser.toJSON());
+        return done(null, dbUser.toJSON());
     })
 };
 
 function createLocalUser(req, resp, next) {
-    userMdl.findOne( {userId: req.body.username}, (err,user) => {
-        if(err){
-           return resp.sendStatus(500);
+    userMdl.findOne({ userId: req.body.username }, (err, user) => {
+        if (err) {
+            return resp.sendStatus(500);
         }
-        if(user){
+        if (user) {
             resp.status(302);
-           return resp.send('User already exsist');
+            return resp.send('User already exsist');
         }
-        bcrypt.hash(req.body.password, null, null, function(err, hash) {
-            if(err){
+        bcrypt.hash(req.body.password, null, null, function (err, hash) {
+            if (err) {
                 resp.status = 500;
                 return resp.send(err);
             }
@@ -66,11 +66,11 @@ function createLocalUser(req, resp, next) {
             user.fullName = req.body.fullName;
             user.name = req.body.username;
             user.isSocial = false;
-            user.userId = req.body.username;
+            user.id = req.body.username;
             user.passwordHash = hash;
 
-            user.save((err,result) => {
-                if(err){
+            user.save((err, result) => {
+                if (err) {
                     resp.status = 500;
                     resp.send(err);
                 }
@@ -81,58 +81,39 @@ function createLocalUser(req, resp, next) {
 
 }
 
-function getUser(userid,callback){
-    userMdl.findOne({userId:userid }, (err,usr) => {
-        if(err){
-            callback(err,null);
+function logOut(req,res,next){
+       req.logOut();
+       req.session.destroy();
+       return res.sendStatus(200);
+    };
+
+function getUser(req, res, next) {
+    var userId = req.params.id;
+    if (userId === undefined || userId === "undefined") {
+        return res.sendStatus(401);
+    }
+    userMdl.findOne({ id: userId }, (err, usr) => {
+        if (err) {
+            return res.status(500).send(err);
         }
-        callback(null,usr);    
+        usr.passwordHash = undefined;
+        return res.send(usr);
     });
 }
 
-function authLocal (req,res,next)  {
-    passport.authenticate('local', (err,account) => {
-        req.login(account , () => {
-            if(account){
+function authLocal(req, res, next) {
+    passport.authenticate('local', (err, account) => {
+        req.login(account, () => {
+            if (account) {
                 account.passwordHash = undefined;
             }
             res.status(err ? 500 : 200).send(err ? err : account);
         });
-    })(req,res,next);
+    })(req, res, next);
 };
 
-function UpdateUser(user,done){
-    var searchQuery = {
-        fullName: user.displayName
-    };
-
-    var updates = {
-        fullName: user.displayName,
-        userId: user.id,
-        avatarUrl:''
-    };
-
-    if(user.photos){
-        updates.avatarUrl = user.photos[0].value
-    }
-
-    var options = {
-        upsert: false,
-        new:true
-    };
-
-    // update the user if s/he exists or add a new user
-    userMdl.findOneAndUpdate(searchQuery, updates, options, function(err, dbUser) {
-        if(err) {
-            return done(err);
-        } else {
-            return done(null, dbUser);
-        }
-    });
-}
-
 passport.serializeUser(function (user, done) {
-    CreateOrUpdateUser(user,done);
+    CreateOrUpdateUser(user, done);
 });
 
 passport.deserializeUser(function (obj, done) {
@@ -144,4 +125,5 @@ ctrl.LoginLocalUser = LoginUser;
 ctrl.CreateLocalUser = createLocalUser;
 ctrl.authLocal = authLocal;
 ctrl.getUser = getUser;
+ctrl.logOut = logOut;
 module.exports = ctrl;

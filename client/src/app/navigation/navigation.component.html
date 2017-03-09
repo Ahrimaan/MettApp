@@ -26,6 +26,7 @@
                        <!-- <li><a href="#"><span class="glyphicon glyphicon-cog"></span>Settings</a></li> -->
                         <li class="divider"></li>
                         <li (click)=logout()><a href="#"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
+                        <li *ngIf="isAdmin"><a routerLink="admin"><span class="glyphicon glyphicon-bookmark"></span>Administration</a></li>
                     </ul>
                 </li>
             </ul>
