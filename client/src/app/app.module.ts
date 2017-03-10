@@ -14,7 +14,7 @@ import { NavigationComponent } from './navigation';
 import { HttpOptions, OrderBy  } from './shared/';
 import { AdminComponent,AdminListComponent } from './administrator';
 
-import { comp } from './mett-appointment/comp';
+import { MettItemComponent } from './mett-appointment';
 
 
 @NgModule({
@@ -28,7 +28,7 @@ import { comp } from './mett-appointment/comp';
     OrderBy,
     AdminComponent,
     AdminListComponent,
-    comp
+    MettItemComponent
   ],
   imports: [
     BrowserModule,

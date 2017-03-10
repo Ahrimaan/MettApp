@@ -6,13 +6,13 @@ import { AppointmentService } from './mett-appointment.service';
 import { MettAppointmentModel } from './';
 
 @Component({
-  selector: '[app-comp]',
-  templateUrl: './comp.html',
+  selector: 'app-mett-item',
+  templateUrl: './mett.item.component.html',
   styleUrls: ['./mett-appointment.component.css'],
   providers: [AppointmentService]
 })
 
-export class comp {
+export class MettItemComponent {
   @Input() item: MettAppointmentModel
 
   constructor(public af: AuthService,
