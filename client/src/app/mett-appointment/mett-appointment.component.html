@@ -11,7 +11,10 @@
       </div>
       <ul class="timeline">
         <li [class.timeline-inverted]="i%2 != 0" *ngFor="let item of appointments | orderBy : ['Date'] | async  ;let i = index">
-          <ng-container *ngIf="item.participated">
+          <app-mett-item [item]=item>
+            
+          </app-mett-item>
+         <!-- <ng-container *ngIf="item.participated">
             <div class="timeline-badge success">
               <i class="glyphicon glyphicon-ok"></i>
             </div>
@@ -50,7 +53,7 @@
                 </ng-container>
               </div>
             </div>
-          </div>
+          </div> -->
         </li>
       </ul>
       <!-- Template for if user is admin -->
