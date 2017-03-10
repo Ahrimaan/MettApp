@@ -4,7 +4,6 @@ import { MettAppointmentDetailComponent  } from './mett-appointment-detail.compo
 import { AppointmentService } from './mett-appointment.service';
 import { MettAppointmentModel } from './mett-appointment.model';
 import { MettOrder } from './mett-appointment-detail.model';
-import { MettItemComponent  } from './mett.item.component';
 
 export const MettAppointmentRoute: Route[] = [
    { path: 'home', component: MettAppointmentComponent },
@@ -12,4 +11,4 @@ export const MettAppointmentRoute: Route[] = [
 ]
 
 export { MettAppointmentComponent, MettAppointmentDetailComponent, AppointmentService, MettAppointmentModel,
-  MettOrder, MettItemComponent };
+  MettOrder };
