@@ -3,6 +3,7 @@ var mongo = require('mongoose');
 var Schema = mongo.Schema;
 
 var participant = new Schema({
+    fullName:String,
     userID:String,
     createDate:Date,
     value:Number,

@@ -13,4 +13,5 @@ module.exports = function (server) {
     server.delete('/user/:id', ctrl.logOut);
     server.post('/user', ctrl.CreateLocalUser);
     server.post('/user/login',ctrl.authLocal);
+    server.post('/user/unlock/:id', ctrl.unlockUser)
 }

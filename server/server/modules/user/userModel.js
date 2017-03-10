@@ -3,7 +3,6 @@
  */
 
 var mongo = require('mongoose');
-
 var Schema = mongo.Schema;
 
 var userSchema = new Schema({
@@ -18,3 +17,5 @@ var userSchema = new Schema({
 });
 
 module.exports = mongo.model('user', userSchema);
+
+

@@ -3,4 +3,5 @@ export class MettOrder{
    public value: Number = 1;
    public specialNeeds: string = "";
    public payed: boolean = false ;
+   public fullName: string;
 }

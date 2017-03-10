@@ -8,13 +8,11 @@ import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 // User Code Imports
 import { AppRoutes } from './app.routes';
 import { AppComponent } from './app.component';
-import { AuthenticationComponent, AuthService, RegisterUserComponent } from './authentication';
+import { AuthenticationComponent, AuthService, RegisterUserComponent, UnlockComponent } from './authentication';
 import { MettAppointmentComponent, MettAppointmentDetailComponent, AppointmentService  } from './mett-appointment';
 import { NavigationComponent } from './navigation';
 import { HttpOptions, OrderBy  } from './shared/';
-import { AdminComponent,AdminListComponent } from './administrator';
-
-import { comp } from './mett-appointment/comp';
+import { AdminComponent, AdminListComponent } from './administrator';
 
 
 @NgModule({
@@ -28,7 +26,7 @@ import { comp } from './mett-appointment/comp';
     OrderBy,
     AdminComponent,
     AdminListComponent,
-    comp
+    UnlockComponent
   ],
   imports: [
     BrowserModule,

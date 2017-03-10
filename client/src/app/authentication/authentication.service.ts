@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs/Rx';
 import { Http, Response, RequestOptions, Headers, RequestOptionsArgs } from '@angular/http';
+import { HttpOptions } from './../shared/httpOptionHeader';
 import { Subscription } from 'rxjs/Subscription';
 import { UserObject } from './userObject';
 
@@ -17,21 +18,21 @@ export class AuthService {
   private authSubcriber: Subscription;
   private newWindow: any;
 
-  private httpOptions = new RequestOptions({
-    withCredentials: true,
-    headers:
-    new Headers(
-      {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type,'
-        + ' Accept,user,Access-Control-Expose-Headers,Access-Control-Allow-Methods',
-        'Access-Control-Expose-Headers': 'accept, authorization, content-type, x-requested-with, jwt, user',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE'
-      }
-    )
-  });
+//  private httpOptions = new RequestOptions({
+   // withCredentials: true,
+   // headers:
+   // new Headers(
+     // {
+      //  'Access-Control-Allow-Origin': '*',
+       // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type,'
+       // + ' Accept,user,Access-Control-Expose-Headers,Access-Control-Allow-Methods',
+       // 'Access-Control-Expose-Headers': 'accept, authorization, content-type, x-requested-with, jwt, user',
+       // 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE'
+     // }
+    //)
+ // });
 
-  constructor(public httpClient: Http) {
+  constructor(public httpClient: Http, private httpOptions: HttpOptions) {
     this.authenticatedReply = new BehaviorSubject<boolean>(false);
     this.errorReply = new Subject<string>();
     this.isAdminReply = new BehaviorSubject<boolean>(false);
@@ -47,7 +48,7 @@ export class AuthService {
   }
 
   private getUserData(id: string) {
-    this.httpClient.get(this.userUrl + '/' + id, this.httpOptions)
+    this.httpClient.get(this.userUrl + '/' + id, this.httpOptions.RequestOptions)
       .map(resp => resp.json())
       .subscribe(resp => {
         this.setUserStorage(resp);
@@ -59,7 +60,7 @@ export class AuthService {
   }
 
   private getAdminStatus(id: string) {
-    this.httpClient.get(this.adminUrl + '/' + id, this.httpOptions).subscribe(resp => {
+    this.httpClient.get(this.adminUrl + '/' + id, this.httpOptions.RequestOptions).subscribe(resp => {
       let userObj = JSON.parse(sessionStorage.getItem('userObject'));
       userObj.IsAdmin = resp.status === 200;
       this.setUserStorage(userObj);
@@ -86,10 +87,14 @@ export class AuthService {
     }
   }
 
+  unlockUser(guid: string) {
+    return this.httpClient.post(this.userUrl + '/unlock/' + guid, null, this.httpOptions.RequestOptions );
+  }
+
   startAuthTimerCheck() {
     let checkTimer = Observable.interval(1000)
       .map(() => {
-        return this.httpClient.get(this.socialUrl, this.httpOptions)
+        return this.httpClient.get(this.socialUrl, this.httpOptions.RequestOptions)
           .subscribe((data: Response) => {
             if (data.status === 200 || data.status === 304) {
               this.authSubcriber.unsubscribe();
@@ -106,7 +111,7 @@ export class AuthService {
   }
 
   signInWithMail(mail: string, password: string) {
-    this.httpClient.post(this.localLoginUrl, { 'userId': mail, 'password': password }, this.httpOptions).subscribe(res => {
+    this.httpClient.post(this.localLoginUrl, { 'userId': mail, 'password': password }, this.httpOptions.RequestOptions).subscribe(res => {
       if (res.status === 200) {
         this.getUserData(res.json().id);
       }
@@ -178,7 +183,7 @@ export class AuthService {
   }
 
   signOut(): void {
-    this.httpClient.delete(this.userUrl + '/' + this.id, this.httpOptions).subscribe(res => {
+    this.httpClient.delete(this.userUrl + '/' + this.id, this.httpOptions.RequestOptions).subscribe(res => {
       if (res.status) {
         this.authenticatedReply.next(false);
         sessionStorage.removeItem('userObject');

@@ -39,6 +39,7 @@ export class AppointmentService {
             order.specialNeeds = x.specialNeeds;
             order.userID = x.UserID;
             order.value = x.value;
+            order.fullName = x.fullName;
             return order;
           });
           return model;

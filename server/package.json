@@ -11,6 +11,7 @@
     "cookie-parser": "^1.4.3",
     "express": "*",
     "express-session": "",
+    "guid": "0.0.12",
     "mongoose": "*",
     "morgan": "^1.7.0",
     "node-cache": "*",
@@ -23,6 +24,7 @@
     "passport-oauth2": "^1.4.0",
     "passport-restify": "^1.0.1",
     "password-hash": "^1.2.2",
-    "restify-memory-session": "0.0.6"
+    "restify-memory-session": "0.0.6",
+    "sendgrid": "^4.8.0"
   }
 }

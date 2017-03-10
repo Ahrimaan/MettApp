@@ -31,26 +31,6 @@ exports.getOne = (req, res, next) => {
     })
 };
 
-exports.getParticipants = (req, res, next) => {
-    var mettId = req.params.id;
-    if (!mettId) {
-        console.log('no mettId was given', req);
-        return res.sendStatus(403);
-    }
-    mettModel.findOne({ _id: mettId }).exec((err, result) => {
-        let ids = result.participants.map(val => { return val.userID });
-        userModel.find({ id: { $in: ids } }).exec((err, users) => {
-            let resultList = [];
-            result.participants.forEach(part => {
-                part.fullname = users.findOne({id: part.userID }).fullName;
-                resultList.push(part);
-            })
-
-            return res.send(resultList);
-        });
-    });
-}
-
 exports.participate = (req, res, next) => {
     var mettId = req.params.id;
     if (!mettId) {
@@ -75,7 +55,8 @@ exports.participate = (req, res, next) => {
                     userID: req.body.userID,
                     value: req.body.value,
                     payed: req.body.payed,
-                    specialNeeds: req.body.specialNeeds
+                    specialNeeds: req.body.specialNeeds,
+                    fullName: req.session.passport.user.fullName
                 });
             result.save((err, result) => {
                 if (err) {
