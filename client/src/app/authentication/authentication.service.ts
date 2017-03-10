@@ -4,35 +4,27 @@ import { Http, Response, RequestOptions, Headers, RequestOptionsArgs } from '@an
 import { HttpOptions } from './../shared/httpOptionHeader';
 import { Subscription } from 'rxjs/Subscription';
 import { UserObject } from './userObject';
+import { Configuration } from './../configuration';
 
 @Injectable()
 export class AuthService {
   //TODO: Move to config
-  private adminUrl: string = 'http://localhost:3000/admin';
-  private userUrl: string = 'http://localhost:3000/user';
-  private localLoginUrl: string = 'http://localhost:3000/user/login';
-  private socialUrl: string = 'http://localhost:3000/auth';
+  private adminUrl: string = '';
+  private userUrl: string = '';
+  private localLoginUrl: string = '';
+  private socialUrl: string = '';
   private authenticatedReply: BehaviorSubject<boolean>;
   private errorReply: Subject<string>;
   private isAdminReply: BehaviorSubject<boolean>;
   private authSubcriber: Subscription;
   private newWindow: any;
 
-//  private httpOptions = new RequestOptions({
-   // withCredentials: true,
-   // headers:
-   // new Headers(
-     // {
-      //  'Access-Control-Allow-Origin': '*',
-       // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type,'
-       // + ' Accept,user,Access-Control-Expose-Headers,Access-Control-Allow-Methods',
-       // 'Access-Control-Expose-Headers': 'accept, authorization, content-type, x-requested-with, jwt, user',
-       // 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE'
-     // }
-    //)
- // });
+  constructor(public httpClient: Http, private httpOptions: HttpOptions, private config: Configuration) {
+    this.adminUrl = this.config.ApiUrlBase + 'admin';
+    this.userUrl = this.config.ApiUrlBase + 'user';
+    this.localLoginUrl = this.config.ApiUrlBase + 'user/login';
+    this.socialUrl = this.config.ApiUrlBase + 'auth';
 
-  constructor(public httpClient: Http, private httpOptions: HttpOptions) {
     this.authenticatedReply = new BehaviorSubject<boolean>(false);
     this.errorReply = new Subject<string>();
     this.isAdminReply = new BehaviorSubject<boolean>(false);

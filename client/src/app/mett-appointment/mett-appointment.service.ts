@@ -4,16 +4,18 @@ import 'rxjs/add/operator/mergeMap';
 import { MettAppointmentModel, MettOrder } from './';
 import { Headers, Http, Jsonp } from '@angular/http';
 import { HttpOptions } from './../shared';
+import { Configuration } from './../configuration';
 
 @Injectable()
 export class AppointmentService {
-  private serverUrl: string = 'http://localhost:3000/mett/';
+  private serverUrl: string = '';
 
   private _appointments: BehaviorSubject<MettAppointmentModel[]>;
   private _appointmentCollection: MettAppointmentModel[];
 
 
-  constructor(private httpClient: Http, private httpOptions: HttpOptions) {
+  constructor(private httpClient: Http, private httpOptions: HttpOptions, private conf: Configuration) {
+    this.serverUrl = this.conf.ApiUrlBase + 'mett/';
     this._appointmentCollection = new Array<MettAppointmentModel>();
     this._appointments = new BehaviorSubject<MettAppointmentModel[]>([]);
   }

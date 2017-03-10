@@ -13,6 +13,7 @@ import { MettAppointmentComponent, MettAppointmentDetailComponent, AppointmentSe
 import { NavigationComponent } from './navigation';
 import { HttpOptions, OrderBy  } from './shared/';
 import { AdminComponent, AdminListComponent } from './administrator';
+import { Configuration } from './configuration';
 
 
 @NgModule({
@@ -35,7 +36,7 @@ import { AdminComponent, AdminListComponent } from './administrator';
     RouterModule.forRoot(AppRoutes),
     Ng2Bs3ModalModule
   ],
-  providers: [AuthService,  HttpOptions, AppointmentService],
+  providers: [AuthService,  HttpOptions, AppointmentService, Configuration],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
